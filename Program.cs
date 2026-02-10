@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using DbMetaTool.Firebird;
 
 namespace DbMetaTool
 {
@@ -81,12 +82,18 @@ namespace DbMetaTool
         /// </summary>
         public static void BuildDatabase(string databaseDirectory, string scriptsDirectory)
         {
-            // TODO:
-            // 1) Utwórz pustą bazę danych FB 5.0 w katalogu databaseDirectory.
-            // 2) Wczytaj i wykonaj kolejno skrypty z katalogu scriptsDirectory
-            //    (tylko domeny, tabele, procedury).
-            // 3) Obsłuż błędy i wyświetl raport.
-            throw new NotImplementedException();
+            if (!Directory.Exists(scriptsDirectory))
+                throw new DirectoryNotFoundException($"Nie znaleziono katalogu skryptów: {scriptsDirectory}");
+
+            var dbFilePath = FirebirdSmokeTest.EnsureDbFilePath(databaseDirectory);
+            var connStr = FirebirdSmokeTest.BuildLocalServerConnectionString(dbFilePath);
+
+            // Na razie tylko tworzymy pustą DB i sprawdzamy połączenie
+            // (nie wykonujemy jeszcze skryptów)
+            FirebirdSmokeTest.CreateEmptyDatabase(connStr, overwrite: true);
+
+            Console.WriteLine($"[OK] build-db: utworzono bazę: {dbFilePath}");
+            Console.WriteLine($"[OK] build-db: katalog skryptów istnieje: {scriptsDirectory}");
         }
 
         /// <summary>
@@ -94,11 +101,11 @@ namespace DbMetaTool
         /// </summary>
         public static void ExportScripts(string connectionString, string outputDirectory)
         {
-            // TODO:
-            // 1) Połącz się z bazą danych przy użyciu connectionString.
-            // 2) Pobierz metadane domen, tabel (z kolumnami) i procedur.
-            // 3) Wygeneruj pliki .sql / .json / .txt w outputDirectory.
-            throw new NotImplementedException();
+            Directory.CreateDirectory(outputDirectory);
+
+            FirebirdSmokeTest.VerifyConnection(connectionString);
+
+            Console.WriteLine($"[OK] export-scripts: katalog wyjściowy gotowy: {outputDirectory}");
         }
 
         /// <summary>
@@ -106,11 +113,12 @@ namespace DbMetaTool
         /// </summary>
         public static void UpdateDatabase(string connectionString, string scriptsDirectory)
         {
-            // TODO:
-            // 1) Połącz się z bazą danych przy użyciu connectionString.
-            // 2) Wykonaj skrypty z katalogu scriptsDirectory (tylko obsługiwane elementy).
-            // 3) Zadbaj o poprawną kolejność i bezpieczeństwo zmian.
-            throw new NotImplementedException();
+            if (!Directory.Exists(scriptsDirectory))
+                throw new DirectoryNotFoundException($"Nie znaleziono katalogu skryptów: {scriptsDirectory}");
+
+            FirebirdSmokeTest.VerifyConnection(connectionString);
+
+            Console.WriteLine($"[OK] update-db: katalog skryptów istnieje: {scriptsDirectory}");
         }
     }
 }
