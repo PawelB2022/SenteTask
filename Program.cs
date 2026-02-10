@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using DbMetaTool.Firebird;
+using DbMetaTool.Services;
 
 namespace DbMetaTool
 {
@@ -82,7 +83,7 @@ namespace DbMetaTool
         /// </summary>
         public static void BuildDatabase(string databaseDirectory, string scriptsDirectory)
         {
-            if (!Directory.Exists(scriptsDirectory))
+            /*if (!Directory.Exists(scriptsDirectory))
                 throw new DirectoryNotFoundException($"Nie znaleziono katalogu skryptów: {scriptsDirectory}");
 
             var dbFilePath = FirebirdSmokeTest.EnsureDbFilePath(databaseDirectory);
@@ -93,7 +94,27 @@ namespace DbMetaTool
             FirebirdSmokeTest.CreateEmptyDatabase(connStr, overwrite: true);
 
             Console.WriteLine($"[OK] build-db: utworzono bazę: {dbFilePath}");
-            Console.WriteLine($"[OK] build-db: katalog skryptów istnieje: {scriptsDirectory}");
+            Console.WriteLine($"[OK] build-db: katalog skryptów istnieje: {scriptsDirectory}");*/
+
+            var builder = new DatabaseBuilder();
+
+            var options = new BuildOptions(
+            DatabaseFileName: "database.fdb",
+            OverwriteDatabase: true,
+            PageSize: 4096,
+            ForcedWrites: true,
+            Host: "localhost",
+            Port: 3050,
+            User: "SYSDBA",
+            Password: "masterkey",
+            Charset: "UTF8",
+            Dialect: 3,
+            Pooling: false
+        );
+
+
+            var report = builder.Build(databaseDirectory, scriptsDirectory, options);
+            DatabaseBuilder.PrintReport(report);
         }
 
         /// <summary>
