@@ -1,0 +1,54 @@
+# =========================
+# .NET / C#
+# =========================
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# Test results
+TestResults/
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+*.code-workspace
+
+# =========================
+# User-specific files
+# =========================
+*.user
+*.rsuser
+*.suo
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# Firebird databases
+# =========================
+*.fdb
+*.gdb
+*.fbk
+
+# =========================
+# Local configuration
+# =========================
+appsettings.Development.json
+appsettings.Local.json
+
+# =========================
+# Temporary / output folders
+# =========================
+out/
+publish/
