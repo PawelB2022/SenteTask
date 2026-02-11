@@ -105,3 +105,22 @@ Projekt realizowany jako zadanie rekrutacyjne.
    dotnet run -- export-scripts --connection-string "<connection_string>" --output-dir "C:\sciezka_projektu\out"
    dotnet run -- update-db --connection-string "<connection_string>" --scripts-dir "C:\sciezka_projektu\scripts"
    ```
+
+---
+
+## Nowe właściwości programu
+
+Na obecnym etapie implementacji aplikacja posiada następujące właściwości:
+
+* Budowanie nowej bazy danych Firebird na podstawie zestawu skryptów SQL (`build-db`).
+* Deterministyczne wykonywanie skryptów w kolejności alfabetycznej nazw plików.
+* Obsługa skryptów zawierających dyrektywę `SET TERM`, umożliwiającą poprawne tworzenie procedur składowanych.
+* Wykonywanie skryptów w transakcjach (jedna transakcja na plik), co pozwala na wycofanie zmian w przypadku błędu.
+* Generowanie czytelnego raportu z procesu budowy bazy danych, zawierającego:
+
+  * informację o utworzeniu bazy danych,
+  * liczbę przetworzonych plików,
+  * liczbę wykonanych instrukcji SQL,
+  * listę błędów z nazwą pliku i fragmentem problematycznej instrukcji.
+* Współdzielenie logiki technicznej (ładowanie skryptów, dzielenie instrukcji SQL, wykonywanie poleceń) pomiędzy komendami `build-db` oraz `update-db`.
+* Oddzielenie logiki infrastrukturalnej (Firebird, SQL, IO plików) od logiki sterującej komendami CLI.
