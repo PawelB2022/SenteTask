@@ -94,7 +94,8 @@ namespace DbMetaTool
             FirebirdSmokeTest.CreateEmptyDatabase(connStr, overwrite: true);
 
             Console.WriteLine($"[OK] build-db: utworzono bazę: {dbFilePath}");
-            Console.WriteLine($"[OK] build-db: katalog skryptów istnieje: {scriptsDirectory}");*/
+            Console.WriteLine($"[OK] build-db: katalog skryptów istnieje: {scriptsDirectory}");
+            */
 
             var builder = new DatabaseBuilder();
 
@@ -122,11 +123,16 @@ namespace DbMetaTool
         /// </summary>
         public static void ExportScripts(string connectionString, string outputDirectory)
         {
+            /*
             Directory.CreateDirectory(outputDirectory);
 
             FirebirdSmokeTest.VerifyConnection(connectionString);
 
             Console.WriteLine($"[OK] export-scripts: katalog wyjściowy gotowy: {outputDirectory}");
+            */
+
+            var exporter = new ScriptExporter();
+            exporter.Export(connectionString, outputDirectory);
         }
 
         /// <summary>
