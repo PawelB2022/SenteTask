@@ -81,6 +81,7 @@ Projekt realizowany jako zadanie rekrutacyjne.
    INPUT '01_domains.sql';
    INPUT '02_tables.sql';
    INPUT '03_procedures.sql';
+   ...
    ```
 
 ---
@@ -122,5 +123,52 @@ Na obecnym etapie implementacji aplikacja posiada następujące właściwości:
   * liczbę przetworzonych plików,
   * liczbę wykonanych instrukcji SQL,
   * listę błędów z nazwą pliku i fragmentem problematycznej instrukcji.
+* Eksport metadanych z istniejącej bazy danych do plików `.sql` w katalogu wyjściowym (`export-scripts`).
+* Aktualizacja istniejącej bazy danych poprzez wykonanie skryptów SQL w kontrolowanej kolejności (`update-db`).
 * Współdzielenie logiki technicznej (ładowanie skryptów, dzielenie instrukcji SQL, wykonywanie poleceń) pomiędzy komendami `build-db` oraz `update-db`.
 * Oddzielenie logiki infrastrukturalnej (Firebird, SQL, IO plików) od logiki sterującej komendami CLI.
+
+---
+
+## Testowanie (update-db i export-scripts)
+
+### Przygotowanie
+
+1. Uruchom `build-db`, aby utworzyć bazę testową z bieżących skryptów:
+
+```bash
+dotnet run -- build-db --db-dir "<katalog_bazy>" --scripts-dir "<katalog_skryptów>"
+```
+
+2. Upewnij się, że potrafisz połączyć się do bazy narzędziem `isql`:
+
+```bash
+isql -user SYSDBA -password masterkey
+```
+
+Następnie:
+
+```sql
+CONNECT "<pełna_ścieżka_do_pliku_bazy>";
+```
+
+### Scenariusz aktualizacji (update-db)
+
+1. W katalogu skryptów przygotuj plik aktualizacyjny (np. `04_update.sql`) i umieść w nim zmiany DDL.
+2. Uruchom aktualizację:
+
+```bash
+dotnet run -- update-db --connection-string "<connection_string>" --scripts-dir "<katalog_skryptów>"
+```
+
+3. Zweryfikuj zmiany w bazie zapytaniami SQL (przykłady poniżej).
+
+### Scenariusz eksportu (export-scripts)
+
+1. Wygeneruj skrypty metadanych z aktualnej bazy:
+
+```bash
+dotnet run -- export-scripts --connection-string "<connection_string>" --output-dir "<katalog_wyjściowy>"
+```
+
+2. Sprawdź, czy w katalogu wyjściowym pojawiły się pliki `.sql` opisujące domeny, tabele (z kolumnami) i procedury.
