@@ -1,6 +1,5 @@
 using DbMetaTool.Firebird;
 using DbMetaTool.Scripting;
-using FirebirdSql.Data.FirebirdClient;
 
 namespace DbMetaTool.Services;
 
