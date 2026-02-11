@@ -27,7 +27,19 @@ public sealed class DatabaseUpdater
                 return report;
 
             using var conn = FirebirdConnectionFactory.CreateConnection(connectionString);
-            conn.Open();
+
+            try
+            {
+                conn.Open();
+                report.ConnectionOpened = true;
+            }
+            catch (Exception ex)
+            {
+                report.ConnectionOpened = false;
+                report.Errors.Add(new BuildError("<update-db>", "<open connection>", ex.Message));
+                return report;
+            }
+
 
             foreach (var filePath in files)
             {
@@ -63,6 +75,8 @@ public sealed class DatabaseUpdater
     {
         Console.WriteLine();
         Console.WriteLine("=== UPDATE-DB REPORT ===");
+        Console.WriteLine($"Status: {(report.Succeeded ? "SUCCESS" : "FAILED")}");
+        Console.WriteLine($"Connection opened: {report.ConnectionOpened}");
         Console.WriteLine($"Files: total={report.FilesTotal}, ok={report.FilesSucceeded}, failed={report.FilesFailed}");
         Console.WriteLine($"Statements executed: {report.StatementsExecuted}");
 

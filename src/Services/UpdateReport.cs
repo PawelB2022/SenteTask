@@ -5,6 +5,9 @@ namespace DbMetaTool.Services;
 /// </summary>
 public sealed class UpdateReport
 {
+    public bool ConnectionOpened { get; set; }
+    public bool Succeeded => ConnectionOpened && Errors.Count == 0;
+
     public UpdateReport()
     {
     }
