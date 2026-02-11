@@ -54,6 +54,50 @@ public static class FirebirdScriptExecutor
         }
     }
 
+    //TODO: Ujednolicić funkcję ExecuteFile, by ostatni parametr mógł być BuildReport albo UpdateReport
+    public static void ExecuteFile(
+        FbConnection connection,
+        string fileName,
+        IReadOnlyList<string> statements,
+        UpdateReport report)
+    {
+        using var tx = connection.BeginTransaction();
+        var ok = true;
+
+        foreach (var stmt in statements)
+        {
+            var trimmed = stmt.Trim();
+            if (string.IsNullOrWhiteSpace(trimmed))
+                continue;
+
+            try
+            {
+                using var cmd = new FbCommand(trimmed, connection, tx);
+                cmd.CommandType = System.Data.CommandType.Text;
+                cmd.ExecuteNonQuery();
+
+                report.StatementsExecuted++;
+            }
+            catch (Exception ex)
+            {
+                ok = false;
+                report.Errors.Add(new BuildError(fileName, Shorten(trimmed, 200), ex.Message));
+                break;
+            }
+        }
+
+        if (ok)
+        {
+            tx.Commit();
+            report.FilesSucceeded++;
+        }
+        else
+        {
+            tx.Rollback();
+            report.FilesFailed++;
+        }
+    }
+
     private static string Shorten(string s, int maxLen)
     {
         s = s.Replace("\r", " ").Replace("\n", " ").Trim();

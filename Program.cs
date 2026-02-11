@@ -140,12 +140,18 @@ namespace DbMetaTool
         /// </summary>
         public static void UpdateDatabase(string connectionString, string scriptsDirectory)
         {
+            /*
             if (!Directory.Exists(scriptsDirectory))
                 throw new DirectoryNotFoundException($"Nie znaleziono katalogu skryptów: {scriptsDirectory}");
 
             FirebirdSmokeTest.VerifyConnection(connectionString);
 
             Console.WriteLine($"[OK] update-db: katalog skryptów istnieje: {scriptsDirectory}");
+            */
+
+            var updater = new DatabaseUpdater();
+            var report = updater.Update(connectionString, scriptsDirectory);
+            DatabaseUpdater.PrintReport(report);
         }
     }
 }
