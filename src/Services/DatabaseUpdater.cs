@@ -75,7 +75,6 @@ public sealed class DatabaseUpdater
     {
         Console.WriteLine();
         Console.WriteLine("=== UPDATE-DB REPORT ===");
-        Console.WriteLine($"Status: {(report.Succeeded ? "SUCCESS" : "FAILED")}");
         Console.WriteLine($"Connection opened: {report.ConnectionOpened}");
         Console.WriteLine($"Files: total={report.FilesTotal}, ok={report.FilesSucceeded}, failed={report.FilesFailed}");
         Console.WriteLine($"Statements executed: {report.StatementsExecuted}");

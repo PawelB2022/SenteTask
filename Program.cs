@@ -121,7 +121,6 @@ namespace DbMetaTool
             var updater = new DatabaseUpdater();
             var report = updater.Update(connectionString, scriptsDirectory);
             DatabaseUpdater.PrintReport(report);
-            Environment.ExitCode = report.Succeeded ? 0 : 1;
         }
     }
 }
