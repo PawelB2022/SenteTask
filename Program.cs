@@ -83,20 +83,6 @@ namespace DbMetaTool
         /// </summary>
         public static void BuildDatabase(string databaseDirectory, string scriptsDirectory)
         {
-            /*if (!Directory.Exists(scriptsDirectory))
-                throw new DirectoryNotFoundException($"Nie znaleziono katalogu skryptów: {scriptsDirectory}");
-
-            var dbFilePath = FirebirdSmokeTest.EnsureDbFilePath(databaseDirectory);
-            var connStr = FirebirdSmokeTest.BuildLocalServerConnectionString(dbFilePath);
-
-            // Na razie tylko tworzymy pustą DB i sprawdzamy połączenie
-            // (nie wykonujemy jeszcze skryptów)
-            FirebirdSmokeTest.CreateEmptyDatabase(connStr, overwrite: true);
-
-            Console.WriteLine($"[OK] build-db: utworzono bazę: {dbFilePath}");
-            Console.WriteLine($"[OK] build-db: katalog skryptów istnieje: {scriptsDirectory}");
-            */
-
             var builder = new DatabaseBuilder();
 
             var options = new BuildOptions(
@@ -123,14 +109,6 @@ namespace DbMetaTool
         /// </summary>
         public static void ExportScripts(string connectionString, string outputDirectory)
         {
-            /*
-            Directory.CreateDirectory(outputDirectory);
-
-            FirebirdSmokeTest.VerifyConnection(connectionString);
-
-            Console.WriteLine($"[OK] export-scripts: katalog wyjściowy gotowy: {outputDirectory}");
-            */
-
             var exporter = new ScriptExporter();
             exporter.Export(connectionString, outputDirectory);
         }
@@ -140,15 +118,6 @@ namespace DbMetaTool
         /// </summary>
         public static void UpdateDatabase(string connectionString, string scriptsDirectory)
         {
-            /*
-            if (!Directory.Exists(scriptsDirectory))
-                throw new DirectoryNotFoundException($"Nie znaleziono katalogu skryptów: {scriptsDirectory}");
-
-            FirebirdSmokeTest.VerifyConnection(connectionString);
-
-            Console.WriteLine($"[OK] update-db: katalog skryptów istnieje: {scriptsDirectory}");
-            */
-
             var updater = new DatabaseUpdater();
             var report = updater.Update(connectionString, scriptsDirectory);
             DatabaseUpdater.PrintReport(report);
